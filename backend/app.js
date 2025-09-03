@@ -9,17 +9,18 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "*",
     credentials : true
 }
 ));
 
 app.use(express.json());
 app.use(cookieParser());
+
 app.use("/api/auth", authRouter)
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = 8000 || 5000;
 
 app.listen(PORT, ()=>{
     connectDB()

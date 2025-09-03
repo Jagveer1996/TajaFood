@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { Link, useNavigate } from 'react-router-dom';
+import axios from "axios"
+import { serverUrl } from '../App';
+import { useMutation } from '@tanstack/react-query';
+import { createSignup } from '../API/authAPI';
 
 const Signup = () => {
     const primaryColor = "#ff4d2d";
@@ -8,8 +14,50 @@ const Signup = () => {
     const borderColor = "#ddd";
 
     const [showPassword, setShowPassword] = useState(false);
+    let navigate = useNavigate();
 
     let [role, setRole] = useState("user");
+    let [fullName, setFullName] = useState("");
+    let [email, setEmail] = useState("");
+    let [mobile, setMobile] = useState("");
+    let [password, setPassword] = useState("");
+
+
+    // const handleSignup = async ()=>{
+    //     try {
+    //         const result = await axios.post(`http://localhost:8000/api/auth/signup`, {
+    //             fullName, email, password, mobile, role
+    //         }, {withCredentials:true});
+
+    //         console.log(result);
+            
+    //     } catch (error) {
+    //         console.log(error);
+            
+    //     }    
+    // }
+
+    const {mutate, isError, isSuccess} = useMutation({
+        mutationFn : (data)=>createSignup(data),
+        onSuccess : (res)=>{
+            console.log(res);
+        alert("signup Successfully");
+            
+        }
+    })
+
+    function handleSignup(){
+        const formData = new FormData();
+
+        formData.append("fullName", fullName);
+        formData.append("email", email);
+        formData.append("mobile", mobile);
+        formData.append("password", password);
+        formData.append("role", role)
+
+        mutate(formData);
+    }
+
 
   return (
     <>
@@ -23,7 +71,7 @@ const Signup = () => {
 
                 <div className='mb-4'>
                     <label htmlFor="fullName" className='block text-gray-700 font-medium mb-1'>Full Name</label>
-                    <input type="text" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your fullname' style={{borderColor : borderColor}} />
+                    <input onChange={(e)=>setFullName(e.target.value)} type="text" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your fullname' style={{borderColor : borderColor}} />
 
                    
                 </div>
@@ -31,16 +79,16 @@ const Signup = () => {
                 {/* email */}
 
                 <div className='mb-4'>
-                    <label htmlFor="fullName" className='block text-gray-700 font-medium mb-1'>Email</label>
-                    <input type="email" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your email' style={{borderColor : borderColor}} />
+                    <label htmlFor="email" className='block text-gray-700 font-medium mb-1'>Email</label>
+                    <input onChange={(e)=>setEmail(e.target.value)} type="email" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your email' style={{borderColor : borderColor}} />
 
                 </div>
 
                 {/* mobile */}
 
                 <div className='mb-4'>
-                    <label htmlFor="fullName" className='block text-gray-700 font-medium mb-1'>Mobile no</label>
-                    <input type="text" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your mobile no' style={{borderColor : borderColor}} />
+                    <label htmlFor="mobile" className='block text-gray-700 font-medium mb-1'>Mobile no</label>
+                    <input onChange={(e)=>setMobile(e.target.value)} type="text" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your mobile no' style={{borderColor : borderColor}} />
 
                    
                 </div>
@@ -48,11 +96,11 @@ const Signup = () => {
                 {/* password */}
 
                 <div className='mb-4'>
-                    <label htmlFor="fullName" className='block text-gray-700 font-medium mb-1'>Password</label>
+                    <label htmlFor="password" className='block text-gray-700 font-medium mb-1'>Password</label>
 
                     <div className='relative'>
 
-                    <input type={`${showPassword ? "password" : "text"}`} className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your password' style={{borderColor : borderColor}} />
+                    <input onChange={(e)=>setPassword(e.target.value)} type={`${showPassword ? "password" : "text"}`} className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your password' style={{borderColor : borderColor}} />
                     
                     <button onClick={()=>setShowPassword(prev=>!prev)} className='absolute right-3 top-2.5 text-gray-500 cursor-pointer'>{showPassword ? <FaRegEye /> : <FaRegEyeSlash /> }</button>
 
@@ -63,18 +111,30 @@ const Signup = () => {
                 {/* role */}
 
                 <div className='mb-4'>
-                    <label htmlFor="fullName" className='block text-gray-700 font-medium mb-1'>Password</label>
+                    <label htmlFor="Role" className='block text-gray-700 font-medium mb-1'>Role</label>
 
-                    <div className='relative'>
+                    <div className='flex gap-2'>
 
-                    <input type={`${showPassword ? "password" : "text"}`} className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your password' style={{borderColor : borderColor}} />
+                    {["user", "owner", "deliveryBoy"].map((r)=>(
+                        <button className='flex-1 border rounded-lg px-3 py-2 text-center font-medium transition-colors cursor-pointer' 
+                        onClick={()=>setRole(r)}
+                        style={
+                            role == r? {backgroundColor : primaryColor, color : "white"} : {border : `1px solid ${primaryColor}`, color : "#333"} 
+                        } >{r}</button>
+                    ))}
                     
-                    <button onClick={()=>setShowPassword(prev=>!prev)} className='absolute right-3 top-2.5 text-gray-500 cursor-pointer'>{showPassword ? <FaRegEye /> : <FaRegEyeSlash /> }</button>
-
                     </div>
                    
                 </div>
 
+                <button onClick={handleSignup} className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer'>Sign Up</button>
+
+                <button className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 hover:bg-gray-200'>
+                    <FcGoogle className=' size-[30px]' />
+                    <span>Sign up with Google</span>
+                </button>
+
+                <p onClick={()=> navigate("/signin")} className='text-center mt-4 cursor-pointer'>Already have an account ?  <span className='text-[#ff4d2d]'>Sign-In</span></p>
             </div>
         </div>
     </>
