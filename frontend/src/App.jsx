@@ -4,6 +4,7 @@ import Signup from './pages/Signup'
 import Signin from './pages/Signin'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query' 
+import ForgotPassword from './pages/ForgotPassword'
 
 // import queryClient from './global'
 
@@ -20,6 +21,7 @@ const App = () => {
       <Routes>
         <Route path='signup' element={<Signup />} />
         <Route path='signin' element={<Signin />} />
+        <Route path='forgotpassword' element={<ForgotPassword />} />
       </Routes>
       </QueryClientProvider>
 
