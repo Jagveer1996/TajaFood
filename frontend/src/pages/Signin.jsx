@@ -3,7 +3,9 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { createSignin } from '../API/authAPI';
+import { createSignin, gooleAuthAPI } from '../API/authAPI';
+import {  GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../utils/firebase,js';
 
 const Signin = () => {
 
@@ -24,6 +26,14 @@ const Signin = () => {
       console.log(res);
       alert("sign IN Successfully");
     }
+  });
+
+  const { mutate: googleAuthMutate, isError: googleAuthError, isSuccess: googleAuthSuccess } = useMutation({
+    mutationFn: (data) => gooleAuthAPI(data),
+    onSuccess: (res) => {
+      console.log(res);
+      alert("Google signIn Successfully");
+    }
   })
 
   function handleSignin() {
@@ -34,6 +44,22 @@ const Signin = () => {
     formData.append("password", password);
 
     mutate(formData);
+  };
+
+
+  let handleGoogleAuth = async () => {
+
+    const provider = new GoogleAuthProvider()
+    const result = await signInWithPopup(auth, provider);
+
+    console.log(result);
+    // console.log(result.user.displayName);
+
+    let formData = new FormData();
+
+    formData.append("email", result.user.email);
+
+    googleAuthMutate(formData);
   }
 
   return (
@@ -49,7 +75,7 @@ const Signin = () => {
 
           <div className='mb-4'>
             <label htmlFor="email" className='block text-gray-700 font-medium mb-1'>Email</label>
-            <input onChange={(e) => setEmail(e.target.value)} type="email" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your email' style={{ borderColor: borderColor }} />
+            <input onChange={(e) => setEmail(e.target.value)} type="email" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your email' style={{ borderColor: borderColor }} required />
 
           </div>
 
@@ -70,13 +96,13 @@ const Signin = () => {
 
           {/* Forgot Password */}
 
-          <div onClick={()=>navigate('/forgotpassword')} className='text-right mb-4 text-[#ff4d2d] cursor-pointer'>
+          <div onClick={() => navigate('/forgotpassword')} className='text-right mb-4 text-[#ff4d2d] cursor-pointer'>
             Forgot Password
           </div>
 
           <button onClick={handleSignin} className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer'>Sign In</button>
 
-          <button className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 hover:bg-gray-200'>
+          <button onClick={handleGoogleAuth} className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 hover:bg-gray-200'>
             <FcGoogle className=' size-[30px]' />
             <span>Sign up with Google</span>
           </button>

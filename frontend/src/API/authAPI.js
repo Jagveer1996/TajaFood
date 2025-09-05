@@ -29,3 +29,12 @@ export const resetPasswordAPI = async (data) =>{
 
     return response.data
 }
+
+export const gooleAuthAPI = async(data) =>{
+
+    const response = await queryClient.post('/api/auth/googleauth', data);
+    
+    return response.data;
+
+        
+}

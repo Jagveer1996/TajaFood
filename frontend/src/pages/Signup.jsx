@@ -5,7 +5,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios"
 import { serverUrl } from '../App';
 import { useMutation } from '@tanstack/react-query';
-import { createSignup } from '../API/authAPI';
+import { createSignup, gooleAuthAPI } from '../API/authAPI';
+import { auth } from '../utils/firebase,js';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 const Signup = () => {
     const primaryColor = "#ff4d2d";
@@ -21,6 +23,7 @@ const Signup = () => {
     let [email, setEmail] = useState("");
     let [mobile, setMobile] = useState("");
     let [password, setPassword] = useState("");
+    let [err, setErr] = useState("");
 
 
     // const handleSignup = async ()=>{
@@ -46,6 +49,14 @@ const Signup = () => {
         }
     })
 
+    const {mutate : googleAuthMutate, isError : googleAuthError, isSuccess: googleAuthSuccess} = useMutation({
+        mutationFn : (data)=>gooleAuthAPI(data),
+        onSuccess : (res)=>{
+            console.log(res);
+            alert("Google signup Successfully");
+        }
+    })
+
     function handleSignup(){
         const formData = new FormData();
 
@@ -59,6 +70,29 @@ const Signup = () => {
     }
 
 
+    let handleGoogleAuth = async () =>{
+
+        if(!mobile){
+           return alert("Mobile no is required");
+        }
+ 
+        const provider = new GoogleAuthProvider()
+        const result = await signInWithPopup(auth, provider);
+
+        console.log(result);
+        // console.log(result.user.displayName);
+
+        let formData = new FormData();
+
+        formData.append("fullName", result.user.displayName);
+        formData.append("email", result.user.email);
+        formData.append("mobile", mobile);
+        formData.append("role", role);
+
+        googleAuthMutate(formData);
+        
+    }
+
   return (
     <>
         <div className='min-h-screen w-full flex items-center justify-center p-4' style={{backgroundColor:bgColor}}>
@@ -71,7 +105,7 @@ const Signup = () => {
 
                 <div className='mb-4'>
                     <label htmlFor="fullName" className='block text-gray-700 font-medium mb-1'>Full Name</label>
-                    <input onChange={(e)=>setFullName(e.target.value)} type="text" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your fullname' style={{borderColor : borderColor}} />
+                    <input onChange={(e)=>setFullName(e.target.value)} type="text" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your fullname' style={{borderColor : borderColor}} required />
 
                    
                 </div>
@@ -80,7 +114,7 @@ const Signup = () => {
 
                 <div className='mb-4'>
                     <label htmlFor="email" className='block text-gray-700 font-medium mb-1'>Email</label>
-                    <input onChange={(e)=>setEmail(e.target.value)} type="email" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your email' style={{borderColor : borderColor}} />
+                    <input onChange={(e)=>setEmail(e.target.value)} type="email" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your email' style={{borderColor : borderColor}} required />
 
                 </div>
 
@@ -88,7 +122,7 @@ const Signup = () => {
 
                 <div className='mb-4'>
                     <label htmlFor="mobile" className='block text-gray-700 font-medium mb-1'>Mobile no</label>
-                    <input onChange={(e)=>setMobile(e.target.value)} type="text" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your mobile no' style={{borderColor : borderColor}} />
+                    <input onChange={(e)=>setMobile(e.target.value)} type="text" className='w-full rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500 border-[1px]' placeholder='Enter your mobile no' style={{borderColor : borderColor}} required />
 
                    
                 </div>
@@ -129,7 +163,7 @@ const Signup = () => {
 
                 <button onClick={handleSignup} className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer'>Sign Up</button>
 
-                <button className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 hover:bg-gray-200'>
+                <button onClick={handleGoogleAuth} className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 hover:bg-gray-200'>
                     <FcGoogle className=' size-[30px]' />
                     <span>Sign up with Google</span>
                 </button>
