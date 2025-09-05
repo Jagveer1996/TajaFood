@@ -23,7 +23,6 @@ const Signin = () => {
     onSuccess: (res) => {
       console.log(res);
       alert("sign IN Successfully");
-
     }
   })
 

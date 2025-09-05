@@ -11,3 +11,21 @@ export const createSignin = async (data)=>{
 
     return response.data;
 }
+
+export const sendOtpAPI = async (data)=>{
+    const response = await queryClient.post('/api/auth/sendotp', data);
+
+    return response.data;
+}
+
+export const verifyOtpAPI = async (data)=>{
+    const response = await queryClient.post('/api/auth/verifyotp', data);
+
+    return response.data;
+}
+
+export const resetPasswordAPI = async (data) =>{
+    const response = await queryClient.post('api/auth/resetpassword', data);
+
+    return response.data
+}

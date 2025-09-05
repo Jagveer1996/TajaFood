@@ -1,6 +1,8 @@
+import { useMutation } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
+import { resetPasswordAPI, sendOtpAPI, verifyOtpAPI } from '../API/authAPI';
 
 const ForgotPassword = () => {
 
@@ -11,6 +13,66 @@ const ForgotPassword = () => {
     let [otp, setOTP] = useState("");
     let [updatePassword, setUpdatePassword] = useState("");
     let [confirmPassword, setConfirmPassword] = useState("");
+
+    const {mutate : sendOtpMutate, isError :sendOtpError, isSuccess : sendOtpSuccess} = useMutation({
+        mutationFn : (data)=>sendOtpAPI(data),
+        onSuccess : (res)=>{
+            console.log(res);
+            alert("OTP Has been send Check your gmail");
+            setStep(2)
+        }
+    })
+
+    
+    const {mutate : verifyOtpMutate, isError : verifyOtpErrror, isSuccess : verifyOtpSuccess} = useMutation({
+        mutationFn : (data)=>verifyOtpAPI(data),
+        onSuccess : (res)=>{
+            console.log(res);
+            alert("OTP Has been Verifyied Successfully");
+            setStep(3)
+        }
+    })
+    
+    const {mutate : resetPasswordMutate, isError : resetPasswordErrror, isSuccess : resetPasswordSuccess} = useMutation({
+        mutationFn : (data)=>resetPasswordAPI(data),
+        onSuccess : (res)=>{
+            console.log(res);
+            alert("Password has been Reset Successfully");
+            navigate('/signin')
+        }
+    });
+
+    function handleSendOTP(){
+        let formData = new FormData();
+
+        formData.append("email", email);
+
+        sendOtpMutate(formData);
+    }
+
+    function handleVerifyOTP(){
+        let formData = new FormData();
+
+        formData.append("email", email);
+        formData.append("otp", otp);
+
+        verifyOtpMutate(formData);
+    }
+
+    function handleResetPassword(){
+        if(updatePassword != confirmPassword){
+            return null
+        };
+
+        let formData = new FormData();
+
+        formData.append("email", email);
+        formData.append("newPassword", updatePassword);
+
+        resetPasswordMutate(formData);
+    }
+
+
 
     return (
         <>
@@ -33,7 +95,7 @@ const ForgotPassword = () => {
 
                             </div>
 
-                            <button className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer'>Send OTP</button>
+                            <button onClick={handleSendOTP} className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer'>Send OTP</button>
                         </div>
                     }
 
@@ -49,7 +111,7 @@ const ForgotPassword = () => {
 
                             </div>
 
-                            <button className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer'>Verify OTP</button>
+                            <button onClick={handleVerifyOTP} className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer'>Verify OTP</button>
                         </div>
                     }
 
@@ -72,7 +134,7 @@ const ForgotPassword = () => {
 
                             </div>
 
-                            <button className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer'>Reset Password</button>
+                            <button onClick={handleResetPassword} className='w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer'>Reset Password</button>
                         </div>
                     }
                 </div>
