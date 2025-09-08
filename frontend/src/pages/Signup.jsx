@@ -8,6 +8,8 @@ import { useMutation } from '@tanstack/react-query';
 import { createSignup, gooleAuthAPI } from '../API/authAPI';
 import { auth } from '../utils/firebase,js';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../redux/userSlice';
 
 const Signup = () => {
     const primaryColor = "#ff4d2d";
@@ -26,27 +28,18 @@ const Signup = () => {
     let [err, setErr] = useState("");
 
 
-    // const handleSignup = async ()=>{
-    //     try {
-    //         const result = await axios.post(`http://localhost:8000/api/auth/signup`, {
-    //             fullName, email, password, mobile, role
-    //         }, {withCredentials:true});
-
-    //         console.log(result);
-            
-    //     } catch (error) {
-    //         console.log(error);
-            
-    //     }    
-    // }
+    const dispatch = useDispatch();
 
     const {mutate, isError, isSuccess} = useMutation({
         mutationFn : (data)=>createSignup(data),
         onSuccess : (res)=>{
             console.log(res);
         alert("signup Successfully");
+
+        dispatch(setUserData(res.data))
             
         }
+
     })
 
     const {mutate : googleAuthMutate, isError : googleAuthError, isSuccess: googleAuthSuccess} = useMutation({
@@ -54,6 +47,8 @@ const Signup = () => {
         onSuccess : (res)=>{
             console.log(res);
             alert("Google signup Successfully");
+            dispatch(setUserData(res.data))
+
         }
     })
 

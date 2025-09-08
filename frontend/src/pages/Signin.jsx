@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { Link, useNavigate } from 'react-router-dom';
+import { data, Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { createSignin, gooleAuthAPI } from '../API/authAPI';
 import {  GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../utils/firebase,js';
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../redux/userSlice';
 
 const Signin = () => {
 
@@ -20,11 +22,14 @@ const Signin = () => {
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
 
+  const dispatch = useDispatch()
+
   const { mutate, isError, isSuccess } = useMutation({
     mutationFn: (data) => createSignin(data),
     onSuccess: (res) => {
       console.log(res);
       alert("sign IN Successfully");
+      dispatch(setUserData(res.data))
     }
   });
 
@@ -33,6 +38,9 @@ const Signin = () => {
     onSuccess: (res) => {
       console.log(res);
       alert("Google signIn Successfully");
+
+      dispatch(setUserData(res.data))
+
     }
   })
 

@@ -71,15 +71,14 @@ export const signIn = async (req, res)=>{
             return res.status(400).json({message : "Incorrect Password"});
         };
 
-        const token = await genToken(user._id);
-        res.cookie("token", token, {
-            secure:false,
-            sameSite:"strict",
-            maxAge:60*60*1000,
-            httpOnly: true
-        })
+        const token = genToken(user._id)
+        if (!token) {
+            return res.status(500).json({ message: 'Token generation failed' })
+        }
 
-        return res.status(200).json({message:"user sign in successfully", user})
+
+
+        return res.status(200).json({message:"user sign in successfully", user, token})
 
     }catch(error){
         return res.status(500).json({message:"sign in error", error})
