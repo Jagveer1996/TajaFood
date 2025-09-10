@@ -5,7 +5,7 @@ dotenv.config()
 const genToken = (userId) => {
   try {
     const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
+      expiresIn: '7day',
     })
     return token // ✅ This must be a string
   } catch (error) {
