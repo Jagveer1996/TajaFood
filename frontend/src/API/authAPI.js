@@ -49,3 +49,9 @@ export const gooleAuthAPI = async(data) =>{
 
         
 }
+
+export const logoutAPI = async()=>{
+  const response = await queryClient.get('/api/auth/signout');
+
+  return response;
+}

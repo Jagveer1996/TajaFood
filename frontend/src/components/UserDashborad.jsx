@@ -3,18 +3,35 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { logoutAPI } from '../API/authAPI';
+import { setUserData } from '../redux/userSlice';
 
 const UserDashborad = () => {
 
   const { userData, city } = useSelector(state => state.user)
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const dispatch = useDispatch();
+
+
+
+  const handleLogout= async() =>{
+       try {
+        const result = await logoutAPI();
+        dispatch(setUserData(null));
+       } catch (error) {
+        console.log(error);
+        
+       }
+  }
+
   return (
     <>
       <div className='w-full h-[80px] flex items-center justify-between md:justify-center gap-[30px] px-[20px] fixed top-0 z-[999] bg-[#fff9f6]'>
         {showSearch &&
-          <div className='w-[90%] h-[70px] bg-white shadow-xl rounded-lg items-center flex gap-[20px] fixed top-[80px] left-[5%]'>
+          <div className='md:hidden w-[90%] h-[70px] bg-white shadow-xl rounded-lg items-center flex gap-[20px] fixed top-[80px] left-[5%]'>
             <div className='flex items-center w-[30%] overflow-hidden gap-[10px] px-[10px] border-r-[2px] border-gray-400'>
               <FaLocationDot className='text-[#ff4d2d] text-[25px]' />
               <div className='w-[80%] text-gray-600 truncate'>{city}</div>
@@ -59,7 +76,7 @@ const UserDashborad = () => {
                 {userData?.user.fullName.toUpperCase()}
               </div>
               <div className='md:hidden text-[#ff4d2d] font-semibold cursor-pointer '>My Orders</div>
-              <div className='text-[#ff4d2d] font-semibold cursor-pointer'>LogOut</div>
+              <div onClick={handleLogout} className='text-[#ff4d2d] font-semibold cursor-pointer'>LogOut</div>
             </div>
           }
 
