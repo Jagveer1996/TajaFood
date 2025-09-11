@@ -1,4 +1,4 @@
-import Shop from "../models/shop.model";
+import Shop from "../models/shop.model.js";
 import uploadOnCloudinary from "../utils/cloudinary";
 
 export const addItem = async (req, res) => {
@@ -46,3 +46,4 @@ export const editItem = async (req, res)=>{
         return res.status(500).json({message: "Edit Item error", error})
     }
 }
+

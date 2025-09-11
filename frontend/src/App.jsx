@@ -9,6 +9,7 @@ import useGetCurrentUser from './hooks/useGetCurrentUser'
 import { useSelector } from 'react-redux'
 import Home from './pages/Home'
 import useGetCity from './hooks/useGetCity'
+import useGetShop from './hooks/useGetShop'
 
 // import queryClient from './global'
 
@@ -20,6 +21,7 @@ const App = () => {
 
   useGetCurrentUser();
   useGetCity();
+  useGetShop();
 
   // Gioapi Key : - bb50a520e64148dfb05a089b6a0b061a
 
