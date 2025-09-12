@@ -1,5 +1,5 @@
 import express from "express";
-import { createShop, getShop } from "../controllers/shop.controller.js";
+import { createShop} from "../controllers/shop.controller.js";
 import isAuth from "../middlewares/isAuth.js";
 
 
