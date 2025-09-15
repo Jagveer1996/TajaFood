@@ -11,6 +11,7 @@ import Home from './pages/Home'
 import useGetCity from './hooks/useGetCity'
 import useGetShop from './hooks/useGetShop'
 import CreateEditShop from './pages/CreateEditShop'
+import AddItem from './pages/AddItem'
 
 // import queryClient from './global'
 
@@ -39,6 +40,7 @@ const App = () => {
         <Route path='forgotpassword' element={userData ? <ForgotPassword /> : <Navigate to={"/"} />} />
         <Route path='/' element={userData ? <Home /> : <Navigate to={"/signin"} />} />
         <Route path='/create_edit_shop' element={<CreateEditShop />} />
+        <Route path='/addItem' element={<AddItem />} />
       </Routes> 
       </QueryClientProvider>
 

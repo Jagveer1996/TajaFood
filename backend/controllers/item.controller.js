@@ -1,3 +1,4 @@
+import Item from "../models/item.model.js";
 import Shop from "../models/shop.model.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 
@@ -15,8 +16,12 @@ export const addItem = async (req, res) => {
             return res.status(400).json({message : "Shop not Found"})
         }
         const item = await Item.create({ name, category, foodType, price, image, shop:shop._id})
+        
+        shop.items.push(item.id);
+        await shop.save()
+        await shop.populate("items", "owner")
 
-        return res.status(201).json({message : "Item has been add", item})
+        return res.status(201).json({message : "Item has been add", shop})
 
     } catch (error) {
         return res.status(500).json({message: "Item add error", error})

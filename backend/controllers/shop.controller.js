@@ -11,7 +11,7 @@ export const createShop = async(req, res)=>{
 
         const shop = await Shop.create({name, city, state, address, image, owner:req.userId});
 
-        await shop.populate("owner");
+        await shop.populate("owner", "items");
         return res.status(201).json({message : "Shop Created Successfully", shop})
     } catch (error) {
         return res.status(500).json({message : "create Shop error", error})
@@ -57,7 +57,7 @@ export const editShop = async (req, res) => {
 
 export const getShop = async (req, res) => {
   try {
-    const shop = await Shop.findOne({ owner: req.userId }).populate("owner", "item");
+    const shop = await Shop.findOne({ owner: req.userId }).populate("owner").populate("items");
 
     console.log("get shop", shop);
     
