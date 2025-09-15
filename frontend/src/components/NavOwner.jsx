@@ -11,6 +11,8 @@ import { setUserData } from '../redux/userSlice';
 const NavOwner = () => {
 
     const { userData, city } = useSelector(state => state.user)
+    const { myShopData } = useSelector(state => state.owner)
+
     const [showInfo, setShowInfo] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
     const dispatch = useDispatch();
@@ -34,10 +36,12 @@ const NavOwner = () => {
 
                 {/* ------Cart---------------- */}
                 <div className='flex items-center gap-4'>
+                    {myShopData &&
+                        <div>
+                            <button className='flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] text-[20px] '>Add Item +</button>
+                        </div>
+                    }
 
-                    <div>
-                        <button className='flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] text-[20px] '>Add Item +</button>
-                    </div>
 
 
                     {/* -------My Order Button------- */}

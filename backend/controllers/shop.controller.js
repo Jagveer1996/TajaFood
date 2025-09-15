@@ -55,20 +55,20 @@ export const editShop = async (req, res) => {
   }
 };
 
-// export const getShop = async (req, res) => {
-//   try {
-//     const shop = await Shop.findOne({ owner: req.id }).populate("owner items");
+export const getShop = async (req, res) => {
+  try {
+    const shop = await Shop.findOne({ owner: req.userId }).populate("owner", "item");
 
-//     console.log("get shop", shop);
+    console.log("get shop", shop);
     
 
-//     if (!shop) {
-//       return res.status(404).json({ message: "Shop not found" });
-//     }
+    if (!shop) {
+      return res.status(404).json({ message: "Shop not found" });
+    }
 
-//     return res.status(200).json({ message: "Shop has been received", shop });
-//   } catch (error) {
-//     console.error("Error fetching shop:", error);
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// };
+    return res.status(200).json({ message: "Shop has been received", shop });
+  } catch (error) {
+    console.error("Error fetching shop:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};

@@ -1,4 +1,4 @@
-    import axios from 'axios';
+import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
@@ -19,7 +19,7 @@ const useGetShop = () => {
 
         dispatch(setMyShopData(result.data))
 
-        console.log('current user result', result);
+        console.log('current shop result', result);
       } catch (error) {
         console.log('Error fetching current user:', error);
       }

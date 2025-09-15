@@ -22,13 +22,13 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
-// app.use("/api/shop", shopRouter);
-// app.use("/api/item", itemRouter);
+app.use("/api/shop", shopRouter);
+app.use("/api/item", itemRouter);
 
 
 const PORT = 8000 || 5000;
 
-app.listen(PORT, ()=>{
+ app.listen(PORT, ()=>{
     connectDB()
     console.log(`Server connect successfully ${PORT}`);
     

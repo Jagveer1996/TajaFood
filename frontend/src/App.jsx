@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 import Home from './pages/Home'
 import useGetCity from './hooks/useGetCity'
 import useGetShop from './hooks/useGetShop'
+import CreateEditShop from './pages/CreateEditShop'
 
 // import queryClient from './global'
 
@@ -37,6 +38,7 @@ const App = () => {
         <Route path='signin' element={!userData ? <Signin /> : <Navigate to={"/"} />} />
         <Route path='forgotpassword' element={userData ? <ForgotPassword /> : <Navigate to={"/"} />} />
         <Route path='/' element={userData ? <Home /> : <Navigate to={"/signin"} />} />
+        <Route path='/create_edit_shop' element={<CreateEditShop />} />
       </Routes> 
       </QueryClientProvider>
 
