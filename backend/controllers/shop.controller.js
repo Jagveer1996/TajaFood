@@ -59,7 +59,7 @@ export const getShop = async (req, res) => {
   try {
     const shop = await Shop.findOne({ owner: req.userId }).populate("owner").populate("items");
 
-    console.log("get shop", shop);
+    // console.log("get shop", shop);
     
 
     if (!shop) {

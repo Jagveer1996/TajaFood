@@ -4,10 +4,11 @@ import { FaPen } from "react-icons/fa";
 import NavOwner from './NavOwner'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
+import OwnerItemCard from './OwnerItemCard';
 
 const OwnerDashboard = () => {
   const { myShopData } = useSelector(state => state.owner);
-  console.log("myshopdata owner dashboard", myShopData.shop);
+  // console.log("myshopdata owner dashboard", myShopData.shop);
 
   const navigate = useNavigate();
 
@@ -68,6 +69,15 @@ const OwnerDashboard = () => {
 
           }
 
+          {myShopData.shop.items.length > 0 &&
+            <div className='flex flex-col items-center gap-4 w-full max-w-3xl'>
+              {
+                myShopData.shop.items.map((item, index)=>{
+                  return <OwnerItemCard data={item} key={index} />
+                })
+              }
+            </div>
+          }
 
         </div>
       }

@@ -7,8 +7,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { logoutAPI } from '../API/authAPI';
 import { setUserData } from '../redux/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const NavOwner = () => {
+
+    const navigate = useNavigate();
 
     const { userData, city } = useSelector(state => state.user)
     const { myShopData } = useSelector(state => state.owner)
@@ -38,7 +41,7 @@ const NavOwner = () => {
                 <div className='flex items-center gap-4'>
                     {myShopData &&
                         <div>
-                            <button className='flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] text-[20px] '>Add Item +</button>
+                            <button onClick={()=>navigate("/addItem")} className='flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] text-[20px] '>Add Item +</button>
                         </div>
                     }
 

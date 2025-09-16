@@ -1,14 +1,21 @@
-import { useMutation } from '@tanstack/react-query';
-import React, { useRef, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaBackspace } from "react-icons/fa";;
 import { FaUtensils } from "react-icons/fa";
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { createItemAPI } from '../API/itemAPI';
+import { useNavigate, useParams } from 'react-router-dom';
+import { editItemByIdAPI, getItemByIdAPI } from '../API/itemAPI';
 
-const AddItem = () => {
+const EditItem = () => {
     const navigate = useNavigate();
     const { myShopData } = useSelector(state => state.owner)
+
+    // const params = useParams();
+    // console.log("Params:", params);
+
+    const { itemId } = useParams();
+
+    // console.log("EditItem ID:", itemId);
 
     const [name, setName] = useState("");
     const [price, setPrice] = useState(0);
@@ -18,11 +25,27 @@ const AddItem = () => {
     const [frontendImage, setFrontendImage] = useState(null);
     const [backendImage, setBackendImage] = useState(null);
 
-    const {mutate : createItemMutate, isError : createItemError} = useMutation({
-        mutationFn : (data)=>createItemAPI(data),
+    const {data, isSuccess, isError, error} = useQuery({
+        queryKey : ['getItemByIdAPI', itemId],
+        queryFn : ()=>getItemByIdAPI(itemId),
+        enabled : !!itemId
+    })
+
+    // console.log("get Item By Id", data?.item?.image);
+    
+
+    useEffect(()=>{
+        setName(data?.item?.name);
+        setPrice(data?.item?.price);
+        setCategory(data?.item?.category);
+        setFrontendImage(data?.item?.image)
+    }, [data]);
+
+    const {mutate : editItemMutate, isError : editItemError} = useMutation({
+        mutationFn : (data)=>editItemByIdAPI(data),
         onSuccess : (res)=>{
-            console.log("Item Has been Added", res);
-            alert("Item Has been added")
+            console.log("Item Has been Updated", res);
+            alert("Item Has been Updated")
             
         }
     })
@@ -46,7 +69,7 @@ const AddItem = () => {
                 formData.append("image", backendImage)
                }
 
-               createItemMutate(formData);
+               editItemMutate({itemId, formData});
 
         } catch (error) {
             
@@ -67,7 +90,7 @@ const AddItem = () => {
                         </div>
 
                         <div className='text-3xl font-extrabold text-gray-900'>
-                            Add Food
+                            Edit Food
                         </div>
                     </div>
                     <form onSubmit={handleSubmit} className='space-y-5'>
@@ -126,4 +149,4 @@ const AddItem = () => {
 
 
 
-export default AddItem
+export default EditItem

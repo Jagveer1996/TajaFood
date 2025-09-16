@@ -12,6 +12,7 @@ import useGetCity from './hooks/useGetCity'
 import useGetShop from './hooks/useGetShop'
 import CreateEditShop from './pages/CreateEditShop'
 import AddItem from './pages/AddItem'
+import EditItem from './pages/EditItem'
 
 // import queryClient from './global'
 
@@ -41,6 +42,7 @@ const App = () => {
         <Route path='/' element={userData ? <Home /> : <Navigate to={"/signin"} />} />
         <Route path='/create_edit_shop' element={<CreateEditShop />} />
         <Route path='/addItem' element={<AddItem />} />
+        <Route path='editItem/:itemId' element={userData ? <EditItem/> : <Navigate to={"/signin"} />} />
       </Routes> 
       </QueryClientProvider>
 
