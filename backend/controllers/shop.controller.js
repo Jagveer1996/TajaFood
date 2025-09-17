@@ -72,3 +72,21 @@ export const getShop = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getShopByCity = async (req, res) => {
+  try {
+    const { city } = req.params;
+
+    const shops = await Shop.find({
+      city: { $regex: new RegExp(`^${city}$`, "i") }
+    }).populate("items");
+
+    if (shops.length === 0) {
+      return res.status(404).json({ message: "No shops found in this city." });
+    }
+
+    return res.status(200).json({ message: "Shops found by city", shops });
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching shops by city", error });
+  }
+};

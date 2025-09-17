@@ -14,3 +14,20 @@ export const createShopAPI = async (data) => {
     return response.data;
 }
 
+export const getShopbyCityAPI = async (city) => {
+    const response = await queryClient.get(
+        `/api/shop/get_shopBy_city/${city}`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            }
+        }
+    );
+
+    console.log(response)
+
+    return response.data;
+};
+
+

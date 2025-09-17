@@ -5,23 +5,51 @@ import CategoryCard from "./CategoryCard";
 import { FaChevronCircleLeft } from "react-icons/fa";
 import { FaChevronCircleRight } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { getShopbyCityAPI } from "../API/shopApi";
 
 const UserDashborad = () => {
 
-  const {city} = useSelector(state=>state.user)
+  const { city, shopsInMyCity } = useSelector(state => state.user);
+
+  console.log("User state:", useSelector(state => state.user));
+
+  const { data, isSuccess, isError, error } = useQuery({
+    queryKey: ['getShopbyCityAPI', city],
+    queryFn: () => getShopbyCityAPI(city),
+    enabled: !!city
+  })
+
+  console.log("Fetch shop by city", data);
+
+
+
 
   // console.log("city", city);
-  
+
 
   const cardScroll = useRef();
+  const shopScrollRef = useRef();
   const [LeftScroll, setLeftScroll] = useState(false);
   const [RightScroll, setRightScroll] = useState(false);
+
+  const [shopLeftScroll, setShopLeftScroll] = useState(false);
+  const [shopRightScroll, setShopRightScroll] = useState(false);
 
   const updateScroll = (ref, LeftScroll, RightScroll) => {
     const element = ref.current;
     if (element) {
       setLeftScroll(element.scrollLeft > 0)
       setRightScroll(element.scrollLeft + element.clientWidth < element.scrollWidth)
+
+    }
+  }
+
+    const updateShopScroll = (ref, shopLeftScroll, shopRightScroll) => {
+    const element = ref.current;
+    if (element) {
+      setShopLeftScroll(element.scrollLeft > 0)
+      setShopRightScroll(element.scrollLeft + element.clientWidth < element.scrollWidth)
 
     }
   }
@@ -37,9 +65,13 @@ const UserDashborad = () => {
 
   useEffect(() => {
     if (cardScroll.current) {
-      cardScroll.current.addEventListener("scroll", () => { updateScroll(cardScroll, LeftScroll, RightScroll) })
+      cardScroll.current.addEventListener("scroll", () => { updateScroll(cardScroll, LeftScroll, shopRightScroll) })
     }
-    
+
+    if (shopScrollRef.current) {
+      shopScrollRef.current.addEventListener("scroll", () => { updateShopScroll(shopScrollRef,shopLeftScroll, shopRightScroll) })
+    }
+
   }, [])
 
 
@@ -77,6 +109,26 @@ const UserDashborad = () => {
 
         <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-[10px]">
           <h1 className="text-gray-800 text-2xl sm:text-3xl">Best Shop in {city}</h1>
+
+          <div className="w-full relative">
+            {shopLeftScroll &&
+              <button onClick={() => scrollDirection(shopScrollRef, "left")} className="absolute left-0 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full hover:bg-[#e64528] z-10">
+                <FaChevronCircleLeft />
+              </button>
+            }
+
+            <div className="w-full flex overflow-x-auto gap-4 pb-2 " ref={shopScrollRef}>
+              {/* {shopsInMyCity.map((card, index) => {
+                return <CategoryCard data={card} key={index} />
+              })} */}
+            </div>
+            {shopRightScroll &&
+              <button onClick={() => scrollDirection(shopScrollRef, "right")} className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full hover:bg-[#e64528] z-10">
+                <FaChevronCircleRight />
+              </button>
+            }
+
+          </div>
         </div>
 
       </div>
