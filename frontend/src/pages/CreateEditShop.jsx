@@ -2,9 +2,10 @@ import { useMutation } from '@tanstack/react-query';
 import React, { useRef, useState } from 'react';
 import { FaBackspace } from "react-icons/fa";;
 import { FaUtensils } from "react-icons/fa";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createShopAPI } from '../API/shopApi';
+import { setMyShopData } from '../redux/ownerSlice';
 
 const CreateEditShop = () => {
     const navigate = useNavigate();
@@ -18,10 +19,12 @@ const CreateEditShop = () => {
     const [frontendImage, setFrontendImage] = useState(myShopData?.image || null);
     const [backendImage, setBackendImage] = useState(null);
 
+    const dispatch = useDispatch()
     const {mutate : createShopMutate, isError : createShopError} = useMutation({
         mutationFn : (data)=>createShopAPI(data),
         onSuccess : (res)=>{
-            console.log("Shop Has been Created", res);
+        console.log("Shop Has been Created", res);
+        dispatch(setMyShopData(res.data))
             
         }
     })

@@ -19,10 +19,15 @@ const itemSchema = new mongoose.Schema({
         type: Number,
         min: 0
     },
+    rating : {
+        average : {type : Number, default : 0},
+        count : {type: Number, default : 0}
+    },
     foodtype: {
         type: String,
         enum: ["Veg", "Non-Veg"]
-    }
+    },
+    
 }, { timestamps: true })
 
 const Item = mongoose.model("Item", itemSchema)

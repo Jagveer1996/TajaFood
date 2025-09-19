@@ -48,3 +48,19 @@ export const deleteItemAPI = async(id)=>{
 
     return response.data
 }
+
+export const getItembyCityAPI = async (city) => {
+    const response = await queryClient.get(
+        `/api/item/get-item-by-city/${city}`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            }
+        }
+    );
+
+    // console.log(response)
+
+    return response.data;
+};

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useRef, useState } from 'react';
-import { FaBackspace } from "react-icons/fa";;
+import { FaBackspace } from "react-icons/fa";
 import { FaUtensils } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';

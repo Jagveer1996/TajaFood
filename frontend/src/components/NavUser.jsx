@@ -7,10 +7,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { logoutAPI } from '../API/authAPI';
 import { setUserData } from '../redux/userSlice';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const NavUser = () => {
 
-    const { userData, city } = useSelector(state => state.user)
+    const navigate = useNavigate();
+    const { userData, city, cartItems } = useSelector(state => state.user)
     const [showInfo, setShowInfo] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
     const dispatch = useDispatch();
@@ -60,9 +62,9 @@ const NavUser = () => {
                     {showSearch ? <RxCross1 onClick={() => setShowSearch(false)} className='text-[#ff4d2d] text-[25px] md:hidden' /> : <FaSearch onClick={() => setShowSearch(true)} className='text-[#ff4d2d] text-[25px] md:hidden' />
                     }
 
-                    <div className='relative cursor-pointer'>
+                    <div onClick={()=>navigate("/cartpage")} className='relative cursor-pointer'>
                         <IoCartOutline className='text-[#ff4d2d] text-[25px]' />
-                        <span className='absolute right-[-9px] top-[-12px] text-[#ff4d2d]'>5</span>
+                        <span className='absolute right-[-9px] top-[-12px] text-[#ff4d2d]'>{cartItems.length}</span>
                     </div>
                     {/* -------My Order Button------- */}
                     <button className='hidden md:block px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium'>My Orders</button>

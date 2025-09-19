@@ -25,7 +25,7 @@ export const getShopbyCityAPI = async (city) => {
         }
     );
 
-    console.log(response)
+    // console.log(response)
 
     return response.data;
 };

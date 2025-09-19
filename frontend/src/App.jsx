@@ -13,6 +13,7 @@ import useGetShop from './hooks/useGetShop'
 import CreateEditShop from './pages/CreateEditShop'
 import AddItem from './pages/AddItem'
 import EditItem from './pages/EditItem'
+import CartPage from './pages/CartPage'
 
 // import queryClient from './global'
 
@@ -43,6 +44,7 @@ const App = () => {
         <Route path='/create_edit_shop' element={<CreateEditShop />} />
         <Route path='/addItem' element={<AddItem />} />
         <Route path='editItem/:itemId' element={userData ? <EditItem/> : <Navigate to={"/signin"} />} />
+        <Route path='/cartpage' element={userData ? <CartPage /> : <Navigate to={"/signin"} />} />
       </Routes> 
       </QueryClientProvider>
 

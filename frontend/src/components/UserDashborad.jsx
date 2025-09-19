@@ -4,15 +4,21 @@ import { categories } from "../category";
 import CategoryCard from "./CategoryCard";
 import { FaChevronCircleLeft } from "react-icons/fa";
 import { FaChevronCircleRight } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { getShopbyCityAPI } from "../API/shopApi";
+import shop from "../assets/foodimage/shop.png"
+import { setItemsInMyCity, setShopsInMyCity } from "../redux/userSlice.js";
+import { getItembyCityAPI } from "../API/itemAPI.js";
+import FoodCard from "./FoodCard.jsx";
 
 const UserDashborad = () => {
 
-  const { city, shopsInMyCity } = useSelector(state => state.user);
+  const { city, shopsInMyCity, itemsInMyCity } = useSelector(state => state.user);
 
-  console.log("User state:", useSelector(state => state.user));
+  // console.log("User state:", useSelector(state => state.user));
+  const dispatch = useDispatch();
+
 
   const { data, isSuccess, isError, error } = useQuery({
     queryKey: ['getShopbyCityAPI', city],
@@ -20,12 +26,30 @@ const UserDashborad = () => {
     enabled: !!city
   })
 
-  console.log("Fetch shop by city", data);
+  // console.log("Fetch shop by city", data);
 
 
+  useEffect(() => {
+    if (isSuccess && data?.shops) {
+      dispatch(setShopsInMyCity(data.shops));
+    }
+  }, [isSuccess, data, dispatch]);
 
 
-  // console.log("city", city);
+  const { data: itemData, isSuccess: itemSuccess } = useQuery({
+    queryKey: ['getItembyCityAPI', city],
+    queryFn: () => getItembyCityAPI(city),
+    enabled: !!city
+  })
+  console.log("Fetch Item in my city", itemData);
+
+
+ useEffect(() => {
+  if (itemSuccess && itemData?.items) {
+    dispatch(setItemsInMyCity(itemData.items));
+  }
+}, [itemSuccess, itemData, dispatch]);
+
 
 
   const cardScroll = useRef();
@@ -45,7 +69,7 @@ const UserDashborad = () => {
     }
   }
 
-    const updateShopScroll = (ref, shopLeftScroll, shopRightScroll) => {
+  const updateShopScroll = (ref, shopLeftScroll, shopRightScroll) => {
     const element = ref.current;
     if (element) {
       setShopLeftScroll(element.scrollLeft > 0)
@@ -69,7 +93,7 @@ const UserDashborad = () => {
     }
 
     if (shopScrollRef.current) {
-      shopScrollRef.current.addEventListener("scroll", () => { updateShopScroll(shopScrollRef,shopLeftScroll, shopRightScroll) })
+      shopScrollRef.current.addEventListener("scroll", () => { updateShopScroll(shopScrollRef, shopLeftScroll, shopRightScroll) })
     }
 
   }, [])
@@ -93,7 +117,7 @@ const UserDashborad = () => {
 
             <div className="w-full flex overflow-x-auto gap-4 pb-2 " ref={cardScroll}>
               {categories.map((card, index) => {
-                return <CategoryCard data={card} key={index} />
+                return <CategoryCard name={card.category} image={card.image} key={index} />
               })}
             </div>
             {RightScroll &&
@@ -119,8 +143,12 @@ const UserDashborad = () => {
 
             <div className="w-full flex overflow-x-auto gap-4 pb-2 " ref={shopScrollRef}>
               {/* {shopsInMyCity.map((card, index) => {
-                return <CategoryCard data={card} key={index} />
+                return <CategoryCard name={card.shops.name} image={shop} key={index} />
               })} */}
+
+              {Array.isArray(shopsInMyCity) && shopsInMyCity.map((card, index) => (
+                <CategoryCard name={card?.name} image={shop} key={index} />
+              ))}
             </div>
             {shopRightScroll &&
               <button onClick={() => scrollDirection(shopScrollRef, "right")} className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full hover:bg-[#e64528] z-10">
@@ -128,6 +156,18 @@ const UserDashborad = () => {
               </button>
             }
 
+          </div>
+        </div>
+
+
+        {/* To display shops products */}
+
+        <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-[10px]" >
+          <h1 className="text-gray-800 text-2xl sm:text-3xl">Suggested Food Items</h1>
+          <div className="w-full h-auto flex flex-wrap justify-center gap-[20px]">
+            {Array.isArray(itemsInMyCity) && itemsInMyCity.map((item, index) => (
+              <FoodCard data={item} key={index} />
+            ))}
           </div>
         </div>
 
