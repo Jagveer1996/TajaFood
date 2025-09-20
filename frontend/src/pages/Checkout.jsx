@@ -12,7 +12,10 @@ const Checkout = () => {
     const navigate = useNavigate();
     const { location, address } = useSelector(state => state.map)
 
-
+    const onDragEnd = (e)=>{
+        
+    }
+    
 
     return (
         <>
@@ -39,7 +42,7 @@ const Checkout = () => {
                                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                     />
-                                    <Marker position={[location?.lat, location?.lon]}></Marker>
+                                    <Marker position={[location?.lat, location?.lon]} draggable eventHandlers={{dragend:onDragEnd}}></Marker>
                                 </MapContainer>
                             </div>
                         </div>
